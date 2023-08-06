@@ -12,12 +12,16 @@ public class EventScheduler : MonoBehaviour
     [SerializeField] private TMP_Text _leftKey;
     [SerializeField] private TMP_Text _rightKey;
 
+    [SerializeField] private Animation _upKeyAnimation;
+    [SerializeField] private Animation _leftKeyAnimation;
+    [SerializeField] private Animation _rightKeyAnimation;
+
 
     private void Start()
     {
         Invoke("ChangeBrokenHorizontalInput", 10);
         Invoke("ChangeBrokenJumpInput", 25);
-        Invoke("ChangeBrokenAllInput", 40);
+        Invoke("ChangeBrokenAllInput", 38);
     }
 
     private void ChangeBrokenHorizontalInput()
@@ -26,19 +30,35 @@ public class EventScheduler : MonoBehaviour
         var brokenInput = new BrokenHorizontalInput();
         _player.ChangeInput(brokenInput);
         _audioSource.Play();
-        _leftKey.text = brokenInput.BrokenLeft;
+        SlowTimeFor(2);
+
+
+        _leftKeyAnimation.Play();
+        _rightKeyAnimation.Play();
+
+        _upKey.text = brokenInput.JumpButton;
+        _leftKey.text = brokenInput.LeftButton;
+        _rightKey.text = brokenInput.RightButton;
+
         _leftKey.color = Color.red;
-        _rightKey.text = brokenInput.BrokenRight;
         _rightKey.color = Color.red;
     }
 
     private void ChangeBrokenJumpInput()
     {
+        SlowTimeFor(3);
         _godEye.StartFadeIn(_maxAlpha, _maxAlpha * 2);
         var brokenInput = new BrokenJumpInput();
         _player.ChangeInput(brokenInput);
         _audioSource.Play();
-        _upKey.text = brokenInput.BrokenJump;
+        SlowTimeFor(2);
+
+        _upKey.text = brokenInput.JumpButton;
+        _leftKey.text = brokenInput.LeftButton;
+        _rightKey.text = brokenInput.RightButton;
+
+        _upKeyAnimation.Play();
+
         _upKey.color = Color.red;
         _leftKey.color = Color.blue;
         _rightKey.color = Color.blue;
@@ -50,65 +70,105 @@ public class EventScheduler : MonoBehaviour
         var brokenInput = new BrokenAllInput();
         _player.ChangeInput(brokenInput);
         _audioSource.Play();
-        _upKey.text = brokenInput.BrokenJump;
-        _leftKey.text = brokenInput.BrokenLeft;
-        _rightKey.text = brokenInput.BrokenRight;
+        SlowTimeFor(2);
+
+        _upKey.text = brokenInput.JumpButton;
+        _leftKey.text = brokenInput.LeftButton;
+        _rightKey.text = brokenInput.RightButton;
+
+        _leftKeyAnimation.Play();
+        _rightKeyAnimation.Play();
+        _upKeyAnimation.Play();
+
         _rightKey.color = Color.red;
         _leftKey.color = Color.red;
         _upKey.color = Color.red;
-
     }
 
+    private void SlowTimeFor(int seconds)
+    {
+        Time.timeScale = 0.8f;
+        Invoke("RestoreTimeScale", seconds);
+    }
+
+    private void RestoreTimeScale()
+    {
+        Time.timeScale = 1f;
+    }
 }
 
-public class BrokenHorizontalInput : IInput
+public class BrokenInput : IInput
 {
-    public string BrokenRight => "A";
-    public string BrokenLeft => "D";
+    public string RightButton { get; set; } = "D";
+    public string LeftButton { get; set; } = "A";
+    public string JumpButton { get; set; } = "W";
 
-    private const string HorizontalAxis = "Horizontal";
+    protected const string HorizontalAxis = "Horizontal";
 
-    public float HorizontalMove()
+    public virtual float HorizontalMove()
     {
-        return -Input.GetAxis(HorizontalAxis);
+        return Input.GetAxis(HorizontalAxis);
     }
 
-    public bool Jump()
+    public virtual bool Jump()
     {
         return Input.GetKeyDown(KeyCode.W);
     }
 }
 
-public class BrokenJumpInput : IInput
+public class BrokenHorizontalInput : BrokenInput
 {
-    private const string HorizontalAxis = "Horizontal";
-    public string BrokenJump => "S";
 
-    public float HorizontalMove()
+    public BrokenHorizontalInput()
+    {
+        RightButton = "A";
+        LeftButton = "D";
+    }
+
+    public override float HorizontalMove()
+    {
+        return -Input.GetAxis(HorizontalAxis);
+    }
+
+    public override bool Jump()
+    {
+        return Input.GetKeyDown(KeyCode.W);
+    }
+}
+
+public class BrokenJumpInput : BrokenInput
+{
+    public BrokenJumpInput()
+    {
+        JumpButton = "S";
+    }
+
+    public override float HorizontalMove()
     {
         return Input.GetAxis(HorizontalAxis);
     }
 
-    public bool Jump()
+    public override bool Jump()
     {
         return Input.GetKeyDown(KeyCode.S);
     }
 }
 
-public class BrokenAllInput : IInput
+public class BrokenAllInput : BrokenInput
 {
-    public string BrokenRight => "A";
-    public string BrokenLeft => "D";
-    public string BrokenJump => "S";
+    public BrokenAllInput ()
+    {
+        RightButton = "A";
+        LeftButton = "D";
+        JumpButton = "S";
+    }
 
-    private const string HorizontalAxis = "Horizontal";
-
-    public float HorizontalMove()
+    public override float HorizontalMove()
     {
         return -Input.GetAxis(HorizontalAxis);
     }
 
-    public bool Jump()
+    public override bool Jump()
     {
         return Input.GetKeyDown(KeyCode.S);
     }
