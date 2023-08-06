@@ -45,6 +45,11 @@ public class PlayerMovement : MonoBehaviour
         _input = input;
     }
 
+    public void ChangeInput(IInput input)
+    {
+        _input = input;
+    }
+
     private void Move()
     {
         Vector2 movement;
