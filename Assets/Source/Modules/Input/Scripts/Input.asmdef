@@ -1,0 +1,18 @@
+{
+    "name": "Input",
+    "rootNamespace": "",
+    "references": [
+        "GUID:766171de21483b1469f5d89b131bb946",
+        "GUID:129d999ba100c854bb2c065eb59d66cc",
+        "GUID:921497cdd1726f54fb013dc78f4d1bce"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
