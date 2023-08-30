@@ -1,6 +1,6 @@
 using UnityEngine;
 
-internal class DesktopInput : IInput
+public class DesktopInput : IInput
 {
     private const string HorizontalAxis = "Horizontal";
 

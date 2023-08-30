@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -6,7 +7,7 @@ public class GameCycle : MonoBehaviour
 {
     [SerializeField] private UnityEvent OnPlayerDied;
     [SerializeField] private Transform _player;
-    [SerializeField] private string _scene;
+    [SerializeField] private SceneAsset _currentScene;
 
     private Camera _mainCamera;
     private Vector2 _screenBounds;
@@ -48,6 +49,6 @@ public class GameCycle : MonoBehaviour
 
     public void RestartLevel()
     {
-        SceneManager.LoadScene(_scene);
+        SceneManager.LoadScene(_currentScene.name);
     }
 }

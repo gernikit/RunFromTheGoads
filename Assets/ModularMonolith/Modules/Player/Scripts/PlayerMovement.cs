@@ -1,4 +1,5 @@
 using UnityEngine;
+using Zenject;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -17,6 +18,11 @@ public class PlayerMovement : MonoBehaviour
     private float _horizontal;
 
 
+    [Inject]
+    private void Construct(IInput input)
+    {
+        _input = input;
+    }
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
