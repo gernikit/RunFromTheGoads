@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 
 internal class EventScheduler : MonoBehaviour
@@ -6,16 +5,8 @@ internal class EventScheduler : MonoBehaviour
     [SerializeField] private PlayerMovement _player;
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private FadeInOutEye _godEye;
+    [SerializeField] private KeyboardViewController _keyboardViewController;
     [SerializeField] private float _maxAlpha = 0.3f;
-
-    [SerializeField] private TMP_Text _upKey;
-    [SerializeField] private TMP_Text _leftKey;
-    [SerializeField] private TMP_Text _rightKey;
-
-    [SerializeField] private Animation _upKeyAnimation;
-    [SerializeField] private Animation _leftKeyAnimation;
-    [SerializeField] private Animation _rightKeyAnimation;
-
 
     private void Start()
     {
@@ -31,15 +22,15 @@ internal class EventScheduler : MonoBehaviour
         _player.ChangeInput(brokenInput);
         _audioSource.Play();
 
-        _leftKeyAnimation.Play();
-        _rightKeyAnimation.Play();
+        _keyboardViewController.PlayLeftKeyAnimation();
+        _keyboardViewController.PlayRightKeyAnimation();
 
-        _upKey.text = brokenInput.JumpButton;
-        _leftKey.text = brokenInput.LeftButton;
-        _rightKey.text = brokenInput.RightButton;
+        _keyboardViewController.ChangeTextUpKey(brokenInput.JumpButton);
+        _keyboardViewController.ChangeTextLeftKey(brokenInput.LeftButton);
+        _keyboardViewController.ChangeTextRightKey(brokenInput.RightButton);
 
-        _leftKey.color = Color.red;
-        _rightKey.color = Color.red;
+        _keyboardViewController.ChangeLeftKeyColor(Color.red);
+        _keyboardViewController.ChangeRightKeyColor(Color.red);
     }
 
     private void ChangeBrokenJumpInput()
@@ -49,15 +40,15 @@ internal class EventScheduler : MonoBehaviour
         _player.ChangeInput(brokenInput);
         _audioSource.Play();
 
-        _upKey.text = brokenInput.JumpButton;
-        _leftKey.text = brokenInput.LeftButton;
-        _rightKey.text = brokenInput.RightButton;
+        _keyboardViewController.ChangeTextUpKey(brokenInput.JumpButton);
+        _keyboardViewController.ChangeTextLeftKey(brokenInput.LeftButton);
+        _keyboardViewController.ChangeTextRightKey(brokenInput.RightButton);
 
-        _upKeyAnimation.Play();
+        _keyboardViewController.PlayUpKeyAnimation();
 
-        _upKey.color = Color.red;
-        _leftKey.color = Color.blue;
-        _rightKey.color = Color.blue;
+        _keyboardViewController.ChangeUpKeyColor(Color.red);
+        _keyboardViewController.ChangeLeftKeyColor(Color.blue);
+        _keyboardViewController.ChangeRightKeyColor(Color.blue);
     }
 
     private void ChangeBrokenAllInput()
@@ -67,19 +58,20 @@ internal class EventScheduler : MonoBehaviour
         _player.ChangeInput(brokenInput);
         _audioSource.Play();
 
-        _upKey.text = brokenInput.JumpButton;
-        _leftKey.text = brokenInput.LeftButton;
-        _rightKey.text = brokenInput.RightButton;
+        _keyboardViewController.ChangeTextUpKey(brokenInput.JumpButton);
+        _keyboardViewController.ChangeTextLeftKey(brokenInput.LeftButton);
+        _keyboardViewController.ChangeTextRightKey(brokenInput.RightButton);
 
-        _leftKeyAnimation.Play();
-        _rightKeyAnimation.Play();
-        _upKeyAnimation.Play();
+        _keyboardViewController.PlayUpKeyAnimation();
+        _keyboardViewController.PlayLeftKeyAnimation();
+        _keyboardViewController.PlayRightKeyAnimation();
 
-        _rightKey.color = Color.red;
-        _leftKey.color = Color.red;
-        _upKey.color = Color.red;
+        _keyboardViewController.ChangeUpKeyColor(Color.red);
+        _keyboardViewController.ChangeLeftKeyColor(Color.red);
+        _keyboardViewController.ChangeRightKeyColor(Color.red);
     }
 }
+
 
 public class BrokenInput : IInput
 {
