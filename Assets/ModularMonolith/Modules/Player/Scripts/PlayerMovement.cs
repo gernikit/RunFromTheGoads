@@ -1,8 +1,11 @@
+using UniRx;
 using UnityEngine;
 using Zenject;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField] private GameObject _playerRoot;
+
     [SerializeField] private float _speed = 5f;
     [SerializeField] private float _leftSpeedRatio = 5f;
     [SerializeField] private float _jumpForce = 10f;
@@ -17,12 +20,31 @@ public class PlayerMovement : MonoBehaviour
     private bool _grounded;
     private float _horizontal;
 
+    private MessageBroker _messageBroker;
+    private CompositeDisposable _compositeDisposable;
+
 
     [Inject]
-    private void Construct(IInput input)
+    private void Construct(IInput input, MessageBroker messageBroker)
     {
         _input = input;
+        _messageBroker = messageBroker;
     }
+
+    private void OnEnable()
+    {
+        _compositeDisposable = new CompositeDisposable();
+        _messageBroker
+            .Receive<PlayerLostEvent>()
+            .Subscribe(_ => _playerRoot.SetActive(false))
+            .AddTo(_compositeDisposable);
+    }
+
+    private void OnDisable()
+    {
+        _compositeDisposable?.Dispose();
+    }
+
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
@@ -44,11 +66,6 @@ public class PlayerMovement : MonoBehaviour
     {
         Move();
         Rotate();
-    }
-
-    public void Initialize(IInput input)
-    {
-        _input = input;
     }
 
     public void ChangeInput(IInput input)

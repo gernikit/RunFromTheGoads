@@ -2,7 +2,10 @@
     "name": "Player",
     "rootNamespace": "",
     "references": [
-        "Interfeces"
+        "Interfeces",
+        "Zenject",
+        "UniRx",
+        "GlobalEvents"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

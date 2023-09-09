@@ -1,10 +1,12 @@
 using UniRx;
 using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 
-internal class BackgroundMovement : MonoBehaviour
+public class LostPanel : MonoBehaviour
 {
-    [SerializeField] private float _speed;
+    [SerializeField] private GameObject _windowPanel;
+    [SerializeField] private Button _lostButton;
 
     private MessageBroker _messageBroker;
     private CompositeDisposable _compositeDisposable;
@@ -19,26 +21,21 @@ internal class BackgroundMovement : MonoBehaviour
     {
         _compositeDisposable = new CompositeDisposable();
         _messageBroker
-            .Receive<PlayerWinEvent>()
-            .Subscribe(arg => enabled = false)
-            .AddTo(_compositeDisposable);
-        _messageBroker
             .Receive<PlayerLostEvent>()
-            .Subscribe(arg => enabled = false)
+            .Subscribe(_ => _windowPanel.SetActive(true))
             .AddTo(_compositeDisposable);
+        _lostButton.onClick.AddListener(RestartLevel);
     }
 
     private void OnDisable()
     {
-        _compositeDisposable?.Dispose();
-    }
-    private void Update()
-    {
-        Move();
+        _lostButton.onClick.RemoveListener(RestartLevel);
+        _compositeDisposable.Dispose();
     }
 
-    private void Move()
+    private void RestartLevel()
     {
-        transform.Translate(Vector2.left * (Time.deltaTime * _speed));
+        _messageBroker.Publish(new LevelRestartEvent());
+        gameObject.SetActive(false);
     }
 }

@@ -1,12 +1,42 @@
+using UniRx;
 using UnityEngine;
+using Zenject;
 
 internal class EventScheduler : MonoBehaviour
 {
     [SerializeField] private PlayerMovement _player;
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private FadeInOutEye _godEye;
-    [SerializeField] private KeyboardViewController _keyboardViewController;
+    [SerializeField] private DebuffPanel _debuffPanel;
     [SerializeField] private float _maxAlpha = 0.3f;
+
+    private MessageBroker _messageBroker;
+    private CompositeDisposable _compositeDisposable;
+
+    [Inject]
+    private void Construct(MessageBroker messageBroker)
+    {
+        _messageBroker = messageBroker;
+    }
+
+    private void OnEnable()
+    {
+        _compositeDisposable = new CompositeDisposable();
+        _messageBroker
+            .Receive<PlayerWinEvent>()
+            .Subscribe(arg => enabled = false)
+            .AddTo(_compositeDisposable);
+        _messageBroker
+            .Receive<PlayerLostEvent>()
+            .Subscribe(arg => enabled = false)
+            .AddTo(_compositeDisposable);
+    }
+
+    private void OnDisable()
+    {
+        CancelInvoke();
+        _compositeDisposable?.Dispose();
+    }
 
     private void Start()
     {
@@ -22,15 +52,7 @@ internal class EventScheduler : MonoBehaviour
         _player.ChangeInput(brokenInput);
         _audioSource.Play();
 
-        _keyboardViewController.PlayLeftKeyAnimation();
-        _keyboardViewController.PlayRightKeyAnimation();
-
-        _keyboardViewController.ChangeTextUpKey(brokenInput.JumpButton);
-        _keyboardViewController.ChangeTextLeftKey(brokenInput.LeftButton);
-        _keyboardViewController.ChangeTextRightKey(brokenInput.RightButton);
-
-        _keyboardViewController.ChangeLeftKeyColor(Color.red);
-        _keyboardViewController.ChangeRightKeyColor(Color.red);
+        _debuffPanel.EnableDebuff(Debuff.HorizontalControlBroken);
     }
 
     private void ChangeBrokenJumpInput()
@@ -40,15 +62,8 @@ internal class EventScheduler : MonoBehaviour
         _player.ChangeInput(brokenInput);
         _audioSource.Play();
 
-        _keyboardViewController.ChangeTextUpKey(brokenInput.JumpButton);
-        _keyboardViewController.ChangeTextLeftKey(brokenInput.LeftButton);
-        _keyboardViewController.ChangeTextRightKey(brokenInput.RightButton);
-
-        _keyboardViewController.PlayUpKeyAnimation();
-
-        _keyboardViewController.ChangeUpKeyColor(Color.red);
-        _keyboardViewController.ChangeLeftKeyColor(Color.blue);
-        _keyboardViewController.ChangeRightKeyColor(Color.blue);
+        _debuffPanel.DisableAllDebuffs();
+        _debuffPanel.EnableDebuff(Debuff.JumpBroken);
     }
 
     private void ChangeBrokenAllInput()
@@ -58,27 +73,14 @@ internal class EventScheduler : MonoBehaviour
         _player.ChangeInput(brokenInput);
         _audioSource.Play();
 
-        _keyboardViewController.ChangeTextUpKey(brokenInput.JumpButton);
-        _keyboardViewController.ChangeTextLeftKey(brokenInput.LeftButton);
-        _keyboardViewController.ChangeTextRightKey(brokenInput.RightButton);
-
-        _keyboardViewController.PlayUpKeyAnimation();
-        _keyboardViewController.PlayLeftKeyAnimation();
-        _keyboardViewController.PlayRightKeyAnimation();
-
-        _keyboardViewController.ChangeUpKeyColor(Color.red);
-        _keyboardViewController.ChangeLeftKeyColor(Color.red);
-        _keyboardViewController.ChangeRightKeyColor(Color.red);
+        _debuffPanel.EnableDebuff(Debuff.HorizontalControlBroken);
+        _debuffPanel.EnableDebuff(Debuff.JumpBroken);
     }
 }
 
 
 public class BrokenInput : IInput
 {
-    public string RightButton { get; protected set; } = "D";
-    public string LeftButton { get; protected set; } = "A";
-    public string JumpButton { get; protected set; } = "W";
-
     protected const string HorizontalAxis = "Horizontal";
 
     public virtual float HorizontalMove()
@@ -94,13 +96,6 @@ public class BrokenInput : IInput
 
 public class BrokenHorizontalInput : BrokenInput
 {
-
-    public BrokenHorizontalInput()
-    {
-        RightButton = "A";
-        LeftButton = "D";
-    }
-
     public override float HorizontalMove()
     {
         return -Input.GetAxis(HorizontalAxis);
@@ -114,11 +109,6 @@ public class BrokenHorizontalInput : BrokenInput
 
 public class BrokenJumpInput : BrokenInput
 {
-    public BrokenJumpInput()
-    {
-        JumpButton = "S";
-    }
-
     public override float HorizontalMove()
     {
         return Input.GetAxis(HorizontalAxis);
@@ -132,13 +122,6 @@ public class BrokenJumpInput : BrokenInput
 
 public class BrokenAllInput : BrokenInput
 {
-    public BrokenAllInput ()
-    {
-        RightButton = "A";
-        LeftButton = "D";
-        JumpButton = "S";
-    }
-
     public override float HorizontalMove()
     {
         return -Input.GetAxis(HorizontalAxis);
