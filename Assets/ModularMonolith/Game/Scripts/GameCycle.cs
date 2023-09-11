@@ -9,6 +9,8 @@ public class GameCycle : MonoBehaviour
     [SerializeField] private Transform _player;
     [SerializeField] private SceneAsset _currentScene;
 
+    private bool _playerDied = false;
+
     private MessageBroker _messageBroker;
     private CompositeDisposable _compositeDisposable;
 
@@ -51,8 +53,9 @@ public class GameCycle : MonoBehaviour
     }
     private void Update()
     {
-        if (IsOutOfBounds(_player.position))
+        if (_playerDied == false && IsOutOfBounds(_player.position))
         {
+            _playerDied = true;
             _messageBroker.Publish(new PlayerLostEvent());
         }
     }

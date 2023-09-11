@@ -588,7 +588,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _timerText: {fileID: 225070974}
-  _totalTime: 3
+  _totalTime: 54
 --- !u!224 &428653580
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3839,7 +3839,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fadeInDuration: 3
   _fadeOutDuration: 3
-  _idleDuration: 1
 --- !u!1 &2021521228
 GameObject:
   m_ObjectHideFlags: 0

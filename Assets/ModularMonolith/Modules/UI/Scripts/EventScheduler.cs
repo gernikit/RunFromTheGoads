@@ -47,7 +47,7 @@ internal class EventScheduler : MonoBehaviour
 
     private void ChangeBrokenHorizontalInput()
     {
-        _godEye.StartFadeIn(0, _maxAlpha);
+        _godEye.StartFadeIn( _maxAlpha);
         var brokenInput = new BrokenHorizontalInput();
         _player.ChangeInput(brokenInput);
         _audioSource.Play();
@@ -57,7 +57,7 @@ internal class EventScheduler : MonoBehaviour
 
     private void ChangeBrokenJumpInput()
     {
-        _godEye.StartFadeIn(_maxAlpha, _maxAlpha * 2);
+        _godEye.StartFadeIn(_maxAlpha * 2);
         var brokenInput = new BrokenJumpInput();
         _player.ChangeInput(brokenInput);
         _audioSource.Play();
@@ -68,7 +68,7 @@ internal class EventScheduler : MonoBehaviour
 
     private void ChangeBrokenAllInput()
     {
-        _godEye.StartFadeIn(_maxAlpha * 2, _maxAlpha * 3.3f);
+        _godEye.StartFadeIn(_maxAlpha * 3.3f);
         var brokenInput = new BrokenAllInput();
         _player.ChangeInput(brokenInput);
         _audioSource.Play();
