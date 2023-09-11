@@ -9,7 +9,7 @@ public class GameCycle : MonoBehaviour
     [SerializeField] private Transform _player;
     [SerializeField] private SceneAsset _currentScene;
 
-    private bool _playerDied = false;
+    private bool _availableForUpadate = true;
 
     private MessageBroker _messageBroker;
     private CompositeDisposable _compositeDisposable;
@@ -32,7 +32,7 @@ public class GameCycle : MonoBehaviour
             .AddTo(_compositeDisposable);
         _messageBroker
             .Receive<PlayerWinEvent>()
-            .Subscribe(arg => enabled = false)
+            .Subscribe(arg => _availableForUpadate = false)
             .AddTo(_compositeDisposable);
         _messageBroker
             .Receive<LevelRestartEvent>()
@@ -53,9 +53,9 @@ public class GameCycle : MonoBehaviour
     }
     private void Update()
     {
-        if (_playerDied == false && IsOutOfBounds(_player.position))
+        if (_availableForUpadate == true && IsOutOfBounds(_player.position))
         {
-            _playerDied = true;
+            _availableForUpadate = false;
             _messageBroker.Publish(new PlayerLostEvent());
         }
     }
