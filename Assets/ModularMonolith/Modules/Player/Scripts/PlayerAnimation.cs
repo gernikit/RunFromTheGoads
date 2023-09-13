@@ -1,5 +1,4 @@
 using UnityEngine;
-using Zenject;
 
 internal class PlayerAnimation : MonoBehaviour
 {
@@ -9,16 +8,8 @@ internal class PlayerAnimation : MonoBehaviour
     private readonly int _falling = Animator.StringToHash("Falling");
     private readonly int _jumping = Animator.StringToHash("Jumping");
 
-    private IInput _input;
-
-    private const float JumpingVelocityRatio = 12f;
+    private const float JumpingVelocityRatio = 10f;
     private const float FallingVelocityRatio = -JumpingVelocityRatio;
-
-    [Inject]
-    private void Construct(IInput input)
-    {
-        _input = input;
-    }
 
     private void Start()
     {
@@ -42,6 +33,6 @@ internal class PlayerAnimation : MonoBehaviour
 
     private bool CheckJump()
     {
-        return _input.Jump() && _rigidBody.velocity.y > JumpingVelocityRatio;
+        return _rigidBody.velocity.y > JumpingVelocityRatio;
     }
 }
