@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 using Zenject;
@@ -9,6 +10,8 @@ internal class EventScheduler : MonoBehaviour
     [SerializeField] private FadeInOutEye _godEye;
     [SerializeField] private DebuffPanel _debuffPanel;
     [SerializeField] private float _maxAlpha = 0.3f;
+
+    [SerializeField] private List<float> _timeEventTriger = new List<float>() { 10, 25, 38 };
 
     private MessageBroker _messageBroker;
     private CompositeDisposable _compositeDisposable;
@@ -40,12 +43,12 @@ internal class EventScheduler : MonoBehaviour
 
     private void Start()
     {
-        Invoke(nameof(ChangeBrokenHorizontalInput), 10);
-        Invoke(nameof(ChangeBrokenJumpInput), 25);
-        Invoke(nameof(ChangeBrokenAllInput), 38);
+        Invoke(nameof(ChangeToBrokenHorizontalInput), _timeEventTriger[0]);
+        Invoke(nameof(ChangeToNormalInput), _timeEventTriger[1]);
+        Invoke(nameof(ChangeToBrokenJumpInput), _timeEventTriger[2]);
     }
 
-    private void ChangeBrokenHorizontalInput()
+    private void ChangeToBrokenHorizontalInput()
     {
         _godEye.StartFadeIn( _maxAlpha);
         var brokenInput = new BrokenHorizontalInput();
@@ -55,25 +58,23 @@ internal class EventScheduler : MonoBehaviour
         _debuffPanel.EnableDebuff(Debuff.HorizontalControlBroken);
     }
 
-    private void ChangeBrokenJumpInput()
+    private void ChangeToNormalInput()
     {
         _godEye.StartFadeIn(_maxAlpha * 2);
+        var brokenInput = new DesktopInput();
+        _player.ChangeInput(brokenInput);
+        _audioSource.Play();
+
+        _debuffPanel.DisableDebuff(Debuff.HorizontalControlBroken);
+    }
+
+    private void ChangeToBrokenJumpInput()
+    {
+        _godEye.StartFadeIn(_maxAlpha * 3.3f);
         var brokenInput = new BrokenJumpInput();
         _player.ChangeInput(brokenInput);
         _audioSource.Play();
 
-        _debuffPanel.DisableAllDebuffs();
-        _debuffPanel.EnableDebuff(Debuff.JumpBroken);
-    }
-
-    private void ChangeBrokenAllInput()
-    {
-        _godEye.StartFadeIn(_maxAlpha * 3.3f);
-        var brokenInput = new BrokenAllInput();
-        _player.ChangeInput(brokenInput);
-        _audioSource.Play();
-
-        _debuffPanel.EnableDebuff(Debuff.HorizontalControlBroken);
         _debuffPanel.EnableDebuff(Debuff.JumpBroken);
     }
 }

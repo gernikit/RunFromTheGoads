@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/ModularMonolith/Game/Scenes/BootScene.unity
+    guid: cda963bfe7381ec4e932bcaf2803662f
+  - enabled: 1
+    path: Assets/ModularMonolith/Game/Scenes/TutorialScene.unity
+    guid: b430ea320e8ff114785beff9275bf0c5
+  - enabled: 1
     path: Assets/ModularMonolith/Game/Scenes/PlainsScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects: {}
