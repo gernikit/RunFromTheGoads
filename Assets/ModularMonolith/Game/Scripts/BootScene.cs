@@ -1,12 +1,11 @@
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class BootScene : MonoBehaviour
 {
-    [SerializeField] private SceneAsset _startScene;
+    [SerializeField] private string _startScene;
     void Start()
     {
-        SceneManager.LoadScene(_startScene.name);
+        SceneManager.LoadScene(_startScene);
     }
 }

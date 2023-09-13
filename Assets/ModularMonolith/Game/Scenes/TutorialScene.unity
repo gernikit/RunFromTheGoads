@@ -1152,7 +1152,7 @@ MonoBehaviour:
   - {fileID: 97402696}
   - {fileID: 585122736}
   - {fileID: 1857492276}
-  _gameLevel: {fileID: 102900000, guid: 2cda990e2423bbf4892e6590ba056729, type: 3}
+  _gameLevel: PlainsScene
 --- !u!1 &1143538501
 GameObject:
   m_ObjectHideFlags: 0

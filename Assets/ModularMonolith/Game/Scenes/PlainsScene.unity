@@ -2970,7 +2970,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 1863872589}
-  _currentScene: {fileID: 102900000, guid: 2cda990e2423bbf4892e6590ba056729, type: 3}
+  _currentScene: PlainsScene
 --- !u!4 &1530948922
 Transform:
   m_ObjectHideFlags: 0

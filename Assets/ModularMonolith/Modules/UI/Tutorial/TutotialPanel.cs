@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -8,7 +7,7 @@ public class TutotialPanel : MonoBehaviour
 {
     [SerializeField] private Button _mainButton;
     [SerializeField] private List<GameObject> _advices;
-    [SerializeField] private SceneAsset _gameLevel;
+    [SerializeField] private string _gameLevel;
 
     private ushort _currentAdviceIndex = 0;
 
@@ -29,7 +28,7 @@ public class TutotialPanel : MonoBehaviour
 
         if (_advices.Count == _currentAdviceIndex)
         {
-            SceneManager.LoadScene(_gameLevel.name);
+            SceneManager.LoadScene(_gameLevel);
             return;
         }
 

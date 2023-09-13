@@ -1,5 +1,4 @@
 using UniRx;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
@@ -7,7 +6,7 @@ using Zenject;
 public class GameCycle : MonoBehaviour
 {
     [SerializeField] private Transform _player;
-    [SerializeField] private SceneAsset _currentScene;
+    [SerializeField] private string _currentScene;
 
     private bool _availableForUpadate = true;
 
@@ -72,7 +71,7 @@ public class GameCycle : MonoBehaviour
 
     public void RestartLevel()
     {
-        SceneManager.LoadScene(_currentScene.name);
+        SceneManager.LoadScene(_currentScene);
     }
 
     private Vector2 CalculateScreenBounds()
